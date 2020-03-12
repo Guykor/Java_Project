@@ -1,0 +1,117 @@
+guy_korn
+
+=============================
+=      File description     =
+=============================
+SimpleSet.java - interface for basic Set Operation.
+SimpleHashSet.java - A superclass for implementations of hash-sets implementing the SimpleSet interface.
+CollectionFacadeSet.java - Wraps an underlying Collection and serves to both simplify its API and give it a
+                            common type with the implemented SimpleHashSets.
+OpenHashSet.java - a data structure of type hash set based on chaining to resolve collision.
+StringObject.java - This class wraps String class, and adds a "deleted" flag to String value.
+ClosedHashSet.java - a data structure of type hash set based on quadratic probing to resolve collision.
+SimpleSetPerformanceAnalyzer.java - This class is a performance analyser that compare the running times of
+                                    several operations of type SimpleSet.
+Ex4Utils.java - helper for analysis class.
+RESULTS - the results from the running of all the test in the performance analyser.
+
+
+
+=============================
+=          Design           =
+=============================
+* My design decision while building OpenHashSet and ClosedHashSet was to obtain minimal changes to the
+     SimpleHashSet API. I've realized that both of the HashSets have basically the same API implemented
+     differently but since they had similar but yet different condition and mechanisms i've decided for sake
+     of logically appearance in each data structure class and according the guidance not to change the super
+     class API.
+
+* The performance analyser was built in order to allow flexibility choosing which test to run, so I've
+    created a menu printed in the console such that the call to each test is a result of user choice.
+
+
+=============================
+=  Implementation details   =
+=============================
+* Implementing OpenHashSet’s table:
+    according to guidance, the hash table implemented as wrapped LinkedList<String> with the
+    CollectionFacadeSet in order to create an array of linked lists. The use in CollectionFacadeSet and not
+    in a subclass of this class, preformed because it did'nt required any special treatment, besides
+    Iterator implementation that i've simply added to CollectionFacadeSet, that I thought might come in use
+    for future use of the facade class to iterate through other collections.
+    at each initialization of the hash table i've decided to instantiate LinkedList at
+    every cell of the CollectionFacadeSet array in order to avoid further checks of nullability, causing an
+    negligible effect on the run time complexity.
+
+* How you implemented the deletion mechanism in ClosedHashSet.
+    I've created wrapper (StringObject) class to String class, adding a deleted state for every object of it.
+    Namely, the hash table was an array StringObject that each cell contain a possible String value that can
+    be added, and a flag stating if this value was deleted in case the value was null.
+    that way, each cell in the hash table saved all of the relevant data to search an index.
+    I thought this way could make sense and will be more elegant than saving a flag array equivalent to basic
+    String array in the ClosedHashSet class, but the disadvantage of this method was adding more NullPointers
+    Solutions (if the cell was'nt instantiated, and if it's stored value is null) which decreased the
+    elegance of the implementation.
+    Accordingly, the deletion mechanism searched for the given string in the array, iterating cells that was
+    marked as deleted, found the relevant cell, deleted it's StringObject value (putting null instead) and
+    updating the deleted flag accordingly (and vice versa when adding a new value to this cell in the add
+    method).
+
+=============================
+=    Answers to questions   =
+=============================
+• Discuss the results of the analysis in depth:
+
+– Account, in separate, for OpenHashSet’s and ClosedHashSet’s bad results for data1.txt
+
+    In both OpenHashSet and CloseHashSet, worst result in the test for data1.txt achieved while inserting all
+    of the elements.
+
+    * for OpenHashSet - as it seems in the test results, linked list took a lot of time to add all of
+        data1 elements, than the rest of the data structures, yet faster than OpenHashSet run time.
+        In addition, since data1.txt contain elements with the same hashcode, the mechanism of the set will
+        create one long linked list in only one cell of the hash table
+        Thus, the result of the OpenHashSet caused by high complexity of insertion all of the elements to a
+        single LinkedList plus the complexity of resizing the hash table.
+
+    * For ClosedHashSet - Since all of the elements has the same hash, the probing mechanism will return
+                        the same index for every element, until an attempt that will point to an empty cell,
+                        which is after hashTable.size() iteration. Namely, every insertion will cause a
+                        higher running time in the next insertion : O(1) + O(2) +...+ O(n) = O(n^2).
+
+– Summarize the strengths and weaknesses of each of the data structure as reflected by
+  the results. Which would you use for which purposes?
+
+  it seems that except from linked list, all of the sets implementations have the same asymptotic runtime
+  complexity, except the ClosedHastSet and OpenHashSet has lousy performance on insertion the worst
+  input. therefore, I would choose HashSet Implementation always.
+  between Open and Close hash sets, it seems that open hash sets preform a bit quickly than closed hash sets
+  on the same hash code elements, but closed hashset preforms better when the data hashcodes is uniformly
+  distributed. on other plains both of my two implementations preforms pretty much the same so i would pick
+  between them in considering the data hash codes distribution accordingly.
+
+
+– How did your two implementations compare between themselves?
+    * Insertion -
+            it seems that ClosedHashSet deals better with uniformly distributed HashCodes relative to
+            OpenHashSet and the latter has better performance than a simple LinkedList.
+            for the worst case input, both of the data structures preforms badly relative to the
+            java TreeSet or HashSet implementation.
+
+    * Search unique hash code -
+            it seems both Open and Closed HashSets preforms well when the search value has
+            a unique hashcode comparing to the rest of the elements stored in the set,
+            similar to TreeSet and HashSet. the same happened when all of the elements
+            were distributed uniformly for "hi" and "12" in data2.txt.
+
+    * search most frequent hashcode -
+        Open and Closed preformed poorly while searching an element with the same hash code as the rest of the
+         elements. Since this string is not in the dataset, it means that the Open and Closed mechanism had
+         ran all over their hash table elements in order to determine that this string is not stored there.
+         Although it seems that the OpenHashSet preformed better than the closed, likely due to the fact that
+         OpenHashSet needs to call the search method of the one and only LinkedList it stores (O(n)) while the
+          ClosedHashSet is being called until the it ran over the whole hashtable itself (the capacity) which
+          is much greater than O(n).
+
+– How did your implementations compare to Java’s built in HashSet?
+    java hash set implementation had the best scores in every test.

@@ -1,0 +1,85 @@
+guy_korn
+
+=============================
+=      File description     =
+=============================
+\\First Task - USS Discovery Storage
+1. PhysicalStorage.java - an Interface defining a general physical storage.
+2. SpaceShipDepository.java - an abstract class defining a storage unit in the USS discovery ship; implement
+                                PhysicalStorage interface.
+3. Locker.java - subClass of SpaceShipDepository, define specific type of locker and it's properties.
+4. LongTermStorage.java - subClass of SpaceShipDepository, define specific type of storage unit on the ship.
+
+\Tests
+1. SpaceshipDepositoryTest.java - test suite for the spaceship implemented storage types.
+2. LockerTest.java - test class for the Locker class.
+3. LongTermTest.java - test class for the LongTermStorage class.
+
+
+\\Second Task - Booping Site
+1. BoopingSite.java - implements the Drunkard ship.
+2. HotelProximityComparator.java - implements the special type ship in the game.
+3. HotelRatingComparator.java - creates all the spaceships in the space wars game according to the command line
+arguments.
+
+\Tests
+BoopingSiteTest.java
+
+
+=============================
+=          Design           =
+=============================
+USS:
+
+In my design I tried mainly to considering the flexibility required for such a class, so I've worked
+rigorously to define the objects logically and implement accordingly, namely because it did'nt make sense
+to create only an abstract class of the spaceship as the highest level.
+On the other hand it did make sense creating Locker and LongTermStorage as similar objects (children to the
+the same superclass) because they do hold common properties and affiliation. However, i've decided to leave
+LTS class independent to allow change in the single LTS constraint.
+Another design decision I made was to use composition of the LongTermStorage as a static data member of the
+Locker class, for the need of every locker interact with one and only LongTermStorage instance.
+
+To conclude, considering constraints of API, this design mainly allows to change and add features easily
+thanks to a clear logic form of the classes, such that every unique feature in every class easy to adapt.
+
+Booping:
+
+This Task design decision were mainly derived from the use of comparator interface.
+First, I chose to use only comparators rather than comparable interface in order to maintain the logic that
+there is'nt any compare method the priors the other (there is no natural ordering).
+Second, I had a choice rather to create a lot of comparators, each for a single calculation, and then use
+another super comparator to mange the requested sort. I chose not to for the simplicity of the project in
+the current requirements, namely because for complicated, structured and flexible SearchEngine it's needed to
+make more assumptions that it's redundant to make at this point of the project requirements.
+(that, for example, is why the rank comparator uses in place in String comparator alphabetically etc.)
+In addition, I've decided to use comparators, as in basing the search engine on java.util sort mechanism, in
+different classes, to make the search process more efficient, easy to understand, and namely for the
+comparator - easy to adapt and modify the features i've wrote.
+
+
+
+=============================
+=  Implementation details   =
+=============================
+In the USS task:
+    a big implementation decision was to implement the storage
+    functionality by a Map, such that there is no real saving of an actual Item in a given time in the storage,
+    and instead the storage is only a meta data that updates conceptually the amounts and item types contained in
+    it.
+    I chose to made this cause I understood that the API do not require giving back any items, of even
+    inserting several and different items from the same type, and this solution was made to achieve higher
+    performance given that fact.
+In Booping:
+    I chose to use ArrayList in order to filter the Hotel dataset array. The filtering process required a
+    dynamic data structure, so array didn't do the job, and the cost was mainly conversion time back to Hotel
+    array.
+
+
+
+
+=============================
+=    Answers to questions   =
+=============================
+
+

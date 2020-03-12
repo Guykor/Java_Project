@@ -1,0 +1,32 @@
+guy_korn
+
+
+=============================
+=      File description     =
+=============================
+Book.java - contains a class of a book, include the book details, and borrow status of the book.
+Patron.java - contains a class of a library patron, containing its personal literary preferences.
+Library.java - main class of the library system, include arrays holding books and patrons registerd to the
+            library, and holds methods that allow to manage the library.
+
+=============================
+=          Design           =
+=============================
+I implemented the Library class to allow updating the status of the library books holdings, and its registered
+ patrons. In this way, the book and patrons instances are independent, and library just holds only it's
+ registered items, allowing same book or patron registered in several libraries.
+
+
+=============================
+=  Implementation details   =
+=============================
+In the library I've created arrays to hold the books in the library (aka bookShelf) and the registered patrons
+(aka patronDb). all other details that were relevant to registering a patron or a book and checking their
+status, is being checked dynamically on demand, reducing number of variables to avoid mistakes.
+
+
+=============================
+=    Answers to questions   =
+=============================
+None
+Enjoy my library
